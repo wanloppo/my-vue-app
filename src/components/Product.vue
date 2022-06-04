@@ -1,15 +1,45 @@
 <template>
   <div class="q-pa-md">
-    <!-- <h3>Product</h3> -->
-    <form @submit.prevent="submitForm">
-      <label for="">DepartCode:</label>
-      <input type="text" ref="DepartCodeEl" maxlength="2" size="2" />
-      <label for=""> ProductCode:</label>
-      <input type="text" ref="ProductCodeEl" maxlength="7" size="7" />
-      <label for=""> ProductName:</label>
-      <input type="text" ref="ProductNameEl" maxlength="20" size="20" />&nbsp;
-      <button type="summit">Query</button>
-    </form>
+    <q-form @submit="submitForm" class="q-gutter-md row items-start">
+      <q-input
+        outlined
+        v-model="dpcode"
+        :dense="true"
+        label="Depart"
+        style="max-width: 180px"
+        maxlength="2"
+        size="2"
+      />
+      <q-input
+        rounded
+        outlined
+        v-model="prcode"
+        :dense="true"
+        label="Code"
+        style="max-width: 180px"
+        maxlength="7"
+        size="7"
+      />
+      <q-input
+        rounded
+        outlined
+        v-model="prname"
+        :dense="true"
+        label="Name"
+        style="max-width: 200px"
+        maxlength="20"
+        size="20"
+      />
+      <q-btn
+        type="summit"
+        color="grey-4"
+        text-color="purple"
+        glossy
+        unelevated
+        icon="search"
+        label="Query"
+      />
+    </q-form>
     <q-option-group
       v-model="separator"
       inline
@@ -57,6 +87,9 @@ import { ref } from "vue";
 export default {
   data() {
     return {
+      dpcode: "",
+      prcode: "",
+      prname: "",
       posts: [],
       errors: [],
       Drive: "%",
@@ -92,7 +125,7 @@ export default {
         {
           name: "dp_code",
           align: "center",
-          label: "DepartCode",
+          label: "Depart",
           field: "dp_code",
           sortable: true,
         },
@@ -105,14 +138,14 @@ export default {
         {
           name: "pr_code",
           align: "center",
-          label: "ProductCode",
+          label: "Code",
           field: "pr_code",
           sortable: true,
         },
         {
           name: "pr_abb",
           align: "left",
-          label: "ProductName",
+          label: "Name",
           field: "pr_abb",
         },
         {
@@ -134,12 +167,16 @@ export default {
   },
   methods: {
     submitForm() {
-      // alert('Query');
-      this.dp_code = this.$refs.DepartCodeEl.value;
+      // this.dp_code = this.$refs.DepartCodeEl.value;
+      this.dp_code = this.dpcode;
+      // alert('Query ' + this.dp_code);
       this.dp_code = `${this.dp_code}%`;
-      this.pr_code = this.$refs.ProductCodeEl.value;
+      console.log("Query " + this.dpcode);
+      // this.pr_code = this.$refs.ProductCodeEl.value;
+      this.pr_code = this.prcode;
       this.pr_code = `${this.pr_code}%`;
-      this.pr_name = this.$refs.ProductNameEl.value;
+      // this.pr_name = this.$refs.ProductNameEl.value;
+      this.pr_name = this.prname;
       this.pr_name = `%${this.pr_name}%`;
       this.where_case = this.getsql();
       this.sqlselect = `${this.url}${this.where_case}`;
@@ -157,7 +194,7 @@ export default {
         .then((response) => {
           // JSON responses are automatically parsed.
           // this.posts = response.data;
-          console.log("post ");
+          // console.log("post ");
           this.rows = response.data;
         })
         .catch((e) => {
